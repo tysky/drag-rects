@@ -1,0 +1,1 @@
+Drag colored rectangles
