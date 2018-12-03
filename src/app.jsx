@@ -12,10 +12,11 @@ export default () => {
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   );
   /* eslint-enable */
+  const rectSize = { width: 200, height: 100 };
 
   ReactDOM.render(
     <Provider store={store}>
-      <App />
+      <App rectSize={rectSize} />
     </Provider>,
     document.getElementById('container'),
   );
