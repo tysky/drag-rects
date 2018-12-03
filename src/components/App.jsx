@@ -6,8 +6,12 @@ import isRectsInterseсt from '../utils/isRectsInterseсt';
 import getRectColor from '../utils/getRectColor';
 
 
-const mapStateToProps = ({ rectangles }) => {
-  const props = { rectangles };
+const mapStateToProps = ({ rectangles, rectOffset }) => {
+  const props = {
+    rectangles,
+    offsetX: rectOffset.offsetX,
+    offsetY: rectOffset.offsetY,
+  };
   return props;
 };
 
@@ -18,7 +22,7 @@ class App extends React.Component {
     this.setState({ error: false });
     const { clientX, clientY } = event;
     const { createRect, rectangles, rectSize } = this.props;
-    const hasIntersection = rectangles.some(
+    const hasIntersection = Object.values(rectangles).some(
       ({ x0, y0 }) => isRectsInterseсt({ x0, y0 }, { x0: clientX, y0: clientY }, rectSize),
     );
     if (hasIntersection) {
@@ -36,6 +40,37 @@ class App extends React.Component {
     }
   }
 
+  handleMouseDown = id => (e) => {
+    const { startMovingRect } = this.props;
+    startMovingRect({ rectId: id, x: e.clientX, y: e.clientY });
+  }
+
+  handleMouseUp = id => (e) => {
+    const { finishMovingRect } = this.props;
+    finishMovingRect({ rectId: id });
+  }
+
+  handleMouseMove = id => (event) => {
+    const {
+      movingRect, rectangles, rectSize, offsetX, offsetY, changeRectOffset,
+    } = this.props;
+    const rect = rectangles[id];
+    if (rect.isMoving) {
+      const { clientX, clientY } = event;
+      const { x0, y0 } = rect;
+      movingRect({
+        id,
+        x0: x0 + offsetX,
+        y0: y0 + offsetY,
+        x: x0 + offsetX - rectSize.width / 2,
+        y: y0 + offsetY - rectSize.height / 2,
+        fill: rectangles[id].fill,
+        isMoving: true,
+      });
+      changeRectOffset({ x: clientX, y: clientY });
+    }
+  }
+
   render() {
     const { error } = this.state;
     const { rectangles, rectSize: { height, width } } = this.props;
@@ -47,9 +82,23 @@ class App extends React.Component {
           {error && <span className="error">Error! Can&apos;t add rectangle! Try again.</span>}
         </div>
         <svg width={innerWidth} height={innerHeight} onDoubleClick={this.handleDoubleClick}>
-          {rectangles.map(({
+          {Object.values(rectangles).map(({
             id, x, y, fill,
-          }) => <rect key={id} x={String(x)} y={String(y)} width={String(width)} height={String(height)} fill={fill} stroke="black" strokeWidth="4" />)}
+          }) => (
+            <rect
+              key={id}
+              x={String(x)}
+              y={String(y)}
+              width={String(width)}
+              height={String(height)}
+              fill={fill}
+              stroke="black"
+              strokeWidth="4"
+              onMouseDown={this.handleMouseDown(id)}
+              onMouseUp={this.handleMouseUp(id)}
+              onMouseMove={this.handleMouseMove(id)}
+            />
+          ))}
         </svg>
       </>
     );
