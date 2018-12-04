@@ -1,16 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { uniqueId } from 'lodash';
 import * as actionCreators from '../actions';
 import isRectsInterseсt from '../utils/isRectsInterseсt';
-import getRectColor from '../utils/getRectColor';
+import Rectangle from './Rectangle';
 
-
-const mapStateToProps = ({ rectangles, rectOffset }) => {
+const mapStateToProps = ({ rectangles }) => {
   const props = {
-    rectangles,
-    offsetX: rectOffset.offsetX,
-    offsetY: rectOffset.offsetY,
+    rectangles: Object.values(rectangles),
   };
   return props;
 };
@@ -22,52 +18,18 @@ class App extends React.Component {
     this.setState({ error: false });
     const { clientX, clientY } = event;
     const { createRect, rectangles, rectSize } = this.props;
-    const hasIntersection = Object.values(rectangles).some(
-      ({ x0, y0 }) => isRectsInterseсt({ x0, y0 }, { x0: clientX, y0: clientY }, rectSize),
-    );
+    const rect = { x0: clientX, y0: clientY };
+    const hasIntersection = isRectsInterseсt(rect, rectangles, rectSize);
     if (hasIntersection) {
       this.setState({ error: true });
     } else {
       const newRect = {
-        id: Number(uniqueId()),
-        x0: clientX,
+        x0: clientX, // (x0, y0) - center of the rectangle
         y0: clientY,
         x: clientX - rectSize.width / 2,
         y: clientY - rectSize.height / 2,
-        fill: getRectColor(),
       };
       createRect(newRect);
-    }
-  }
-
-  handleMouseDown = id => (e) => {
-    const { startMovingRect } = this.props;
-    startMovingRect({ rectId: id, x: e.clientX, y: e.clientY });
-  }
-
-  handleMouseUp = id => (e) => {
-    const { finishMovingRect } = this.props;
-    finishMovingRect({ rectId: id });
-  }
-
-  handleMouseMove = id => (event) => {
-    const {
-      movingRect, rectangles, rectSize, offsetX, offsetY, changeRectOffset,
-    } = this.props;
-    const rect = rectangles[id];
-    if (rect.isMoving) {
-      const { clientX, clientY } = event;
-      const { x0, y0 } = rect;
-      movingRect({
-        id,
-        x0: x0 + offsetX,
-        y0: y0 + offsetY,
-        x: x0 + offsetX - rectSize.width / 2,
-        y: y0 + offsetY - rectSize.height / 2,
-        fill: rectangles[id].fill,
-        isMoving: true,
-      });
-      changeRectOffset({ x: clientX, y: clientY });
     }
   }
 
@@ -82,21 +44,17 @@ class App extends React.Component {
           {error && <span className="error">Error! Can&apos;t add rectangle! Try again.</span>}
         </div>
         <svg width={innerWidth} height={innerHeight} onDoubleClick={this.handleDoubleClick}>
-          {Object.values(rectangles).map(({
+          {rectangles.map(({
             id, x, y, fill,
           }) => (
-            <rect
+            <Rectangle
               key={id}
+              id={id}
               x={String(x)}
               y={String(y)}
               width={String(width)}
               height={String(height)}
               fill={fill}
-              stroke="black"
-              strokeWidth="4"
-              onMouseDown={this.handleMouseDown(id)}
-              onMouseUp={this.handleMouseUp(id)}
-              onMouseMove={this.handleMouseMove(id)}
             />
           ))}
         </svg>

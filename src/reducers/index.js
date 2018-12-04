@@ -1,20 +1,38 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
+import omit from 'lodash/omit';
 import * as actions from '../actions';
+import rectSize from '../defaultRectSize';
+import isRectsInterseсt from '../utils/isRectsInterseсt';
 
 
 const rectangles = handleActions({
   [actions.createRect](state, { payload }) {
     return { ...state, [payload.id]: payload };
   },
-  [actions.movingRect](state, { payload }) {
-    // console.log('old', state[payload.id]);
-    // console.log('new', payload);
-    return { ...state, [payload.id]: payload };
-  },
-  [actions.startMovingRect](state, { payload: { rectId } }) {
+  [actions.movingRect](state, { payload: { rectId, x, y } }) {
     const rect = state[rectId];
-    const newRect = { ...rect, isMoving: true };
+
+    const offsetX = x - rect.cursor.x;
+    const offsetY = y - rect.cursor.y;
+
+    const newRect = {
+      ...rect,
+      x0: rect.x0 + offsetX,
+      y0: rect.y0 + offsetY,
+      x: rect.x0 + offsetX - rectSize.width / 2,
+      y: rect.y0 + offsetY - rectSize.height / 2,
+      isMoving: true,
+      cursor: { x, y },
+    };
+    const otherRects = omit(state, rectId);
+
+    const hasIntersection = isRectsInterseсt(newRect, Object.values(otherRects), rectSize);
+    return { ...state, [rectId]: hasIntersection ? rect : newRect };
+  },
+  [actions.startMovingRect](state, { payload: { rectId, x, y } }) {
+    const rect = state[rectId];
+    const newRect = { ...rect, isMoving: true, cursor: { x, y } };
     return { ...state, [rectId]: newRect };
   },
   [actions.finishMovingRect](state, { payload: { rectId } }) {
@@ -24,24 +42,7 @@ const rectangles = handleActions({
   },
 }, {});
 
-const rectOffset = handleActions({
-  [actions.startMovingRect](state, { payload }) {
-    const { x, y } = payload;
-    return { ...state, coordX: x, coordY: y };
-  },
-  [actions.changeRectOffset](state, { payload }) {
-    const { x, y } = payload;
-    const offsetX = x - state.coordX;
-    const offsetY = y - state.coordY;
-    return {
-      offsetX, offsetY, coordX: x, coordY: y,
-    };
-  },
-}, {
-  offsetX: 0, offsetY: 0, coordX: 0, coordY: 0,
-});
 
 export default combineReducers({
   rectangles,
-  rectOffset,
 });
