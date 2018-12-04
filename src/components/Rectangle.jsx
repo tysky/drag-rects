@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions';
 
-const mapStateToProps = ({ rectangles }) => {
+const mapStateToProps = ({ rectangles, linksEditing }) => {
   const props = {
     rectangles,
+    linksEditing,
   };
   return props;
 };
@@ -29,6 +30,21 @@ class Rectangle extends React.Component {
     }
   }
 
+  handleClick = id => () => {
+    const {
+      startLinkingRects,
+      finishLinkingRects,
+      linksEditing: { canAddLinks, startLinking },
+    } = this.props;
+    if (canAddLinks) {
+      if (!startLinking) {
+        startLinkingRects(id);
+      } else {
+        finishLinkingRects(id);
+      }
+    }
+  }
+
   render() {
     const {
       id, x, y, fill, width, height,
@@ -45,6 +61,7 @@ class Rectangle extends React.Component {
         onMouseDown={this.handleMouseDown(id)}
         onMouseUp={this.handleMouseUp(id)}
         onMouseMove={this.handleMouseMove(id)}
+        onClick={this.handleClick(id)}
       />
     );
   }

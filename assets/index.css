@@ -16,6 +16,17 @@
 }
 
 .error {
-  margin-left: 20px;
+  margin-left: 20px;                                                                                                                                                  
   background-color: red;
+}
+
+.links {
+  position: absolute;
+  left: 10px;
+  top:40px;
+  font-size: 1.5rem;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

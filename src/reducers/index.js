@@ -42,7 +42,37 @@ const rectangles = handleActions({
   },
 }, {});
 
+const links = handleActions({
+  [actions.startLinkingRects](state, { payload }) {
+    return { ...state, startRectId: payload };
+  },
+  [actions.finishLinkingRects](state, { payload: { id, rect2Id } }) {
+    const rect1Id = state.startRectId;
+    const isLinkExisted = Object.values(state.byId).some(link => (
+      (rect1Id === link.rect1Id || rect1Id === link.rect2Id)
+      && (rect2Id === link.rect1Id || rect2Id === link.rect2Id)));
+    if (isLinkExisted) {
+      return state;
+    }
+    const newLink = { id, rect1Id, rect2Id };
+    return { ...state, byId: { ...state.byId, [newLink.id]: newLink }, startRectId: null };
+  },
+}, { byId: {}, startRectId: null });
+
+const linksEditing = handleActions({
+  [actions.toggleDrawingLinksMode](state) {
+    return { ...state, canAddLinks: !state.canAddLinks };
+  },
+  [actions.startLinkingRects](state) {
+    return { ...state, startLinking: true };
+  },
+  [actions.finishLinkingRects](state) {
+    return { ...state, startLinking: false };
+  },
+}, { canAddLinks: false, startLinking: false });
 
 export default combineReducers({
   rectangles,
+  links,
+  linksEditing,
 });
