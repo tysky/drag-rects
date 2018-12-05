@@ -57,6 +57,9 @@ const links = handleActions({
     const newLink = { id, rect1Id, rect2Id };
     return { ...state, byId: { ...state.byId, [newLink.id]: newLink }, startRectId: null };
   },
+  [actions.deleteLink](state, { payload }) {
+    return omit(state, `byId.${payload}`);
+  },
 }, { byId: {}, startRectId: null });
 
 const linksEditing = handleActions({
@@ -69,7 +72,10 @@ const linksEditing = handleActions({
   [actions.finishLinkingRects](state) {
     return { ...state, startLinking: false };
   },
-}, { canAddLinks: false, startLinking: false });
+  [actions.toggleDeletingLinksMode](state) {
+    return { ...state, canDeleteLinks: !state.canDeleteLinks };
+  },
+}, { canAddLinks: false, startLinking: false, canDeleteLinks: false });
 
 export default combineReducers({
   rectangles,

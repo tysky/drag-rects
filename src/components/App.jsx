@@ -6,9 +6,11 @@ import Rectangle from './Rectangle';
 import RectsLink from './RectsLink';
 
 const mapStateToProps = ({ rectangles, links, linksEditing }) => {
+  const { canAddLinks, canDeleteLinks } = linksEditing;
   const props = {
     rectangles: Object.values(rectangles),
-    canAddLinks: linksEditing.canAddLinks,
+    canAddLinks,
+    canDeleteLinks,
     links: Object.values(links.byId),
   };
   return props;
@@ -41,10 +43,15 @@ class App extends React.Component {
     toggleDrawingLinksMode();
   }
 
+  handleDeleteLinkCheckbox = () => {
+    const { toggleDeletingLinksMode } = this.props;
+    toggleDeletingLinksMode();
+  }
+
   render() {
     const { error } = this.state;
     const {
-      rectangles, rectSize: { height, width }, canAddLinks, links,
+      rectangles, rectSize: { height, width }, canAddLinks, canDeleteLinks, links,
     } = this.props;
     const { innerWidth, innerHeight } = window;
     return (
@@ -57,6 +64,11 @@ class App extends React.Component {
           <label htmlFor="drawLink" title="To draw a link click to one rectangle and then to another">
             <input id="drawLink" type="checkbox" checked={canAddLinks} onChange={this.handleDrawLinkCheckbox} />
           Draw link
+          </label>
+          <br />
+          <label htmlFor="deleteLink" title="To delete a link click on it">
+            <input id="deleteLink" type="checkbox" checked={canDeleteLinks} onChange={this.handleDeleteLinkCheckbox} />
+          Delete link
           </label>
         </div>
         <svg width={innerWidth} height={innerHeight} onDoubleClick={this.handleDoubleClick}>
@@ -76,6 +88,7 @@ class App extends React.Component {
           {links.map(({ id, rect1Id, rect2Id }) => (
             <RectsLink
               key={id}
+              id={id}
               rect1Id={rect1Id}
               rect2Id={rect2Id}
             />
