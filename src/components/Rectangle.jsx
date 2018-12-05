@@ -2,10 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions';
 
-const mapStateToProps = ({ rectangles, linksEditing }) => {
+const mapStateToProps = ({ rectangles, linksEditing, links }) => {
   const props = {
     rectangles,
     linksEditing,
+    startRectId: links.startRectId,
   };
   return props;
 };
@@ -47,7 +48,7 @@ class Rectangle extends React.Component {
 
   render() {
     const {
-      id, x, y, fill, width, height,
+      id, x, y, fill, width, height, startRectId,
     } = this.props;
     return (
       <rect
@@ -56,8 +57,8 @@ class Rectangle extends React.Component {
         width={width}
         height={height}
         fill={fill}
-        stroke="black"
-        strokeWidth="4"
+        stroke={startRectId === id ? 'yellow' : 'black'}
+        strokeWidth={startRectId === id ? '6' : '4'}
         onMouseDown={this.handleMouseDown(id)}
         onMouseUp={this.handleMouseUp(id)}
         onMouseMove={this.handleMouseMove(id)}
