@@ -16,3 +16,4 @@ export const startLinkingRects = createAction('RECTS_START_LINKING');
 export const finishLinkingRects = createAction('RECTS_FINISH_LINKING', rect2Id => ({ id: uniqueId('link_'), rect2Id }));
 export const toggleDeletingLinksMode = createAction('DELETING_LINKS_MODE_TOGGLE');
 export const deleteLink = createAction('LINK_DELETE');
+export const resetStartLinking = createAction('LINKING_RESET_START');

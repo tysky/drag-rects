@@ -36,10 +36,14 @@ class Rectangle extends React.Component {
       startLinkingRects,
       finishLinkingRects,
       linksEditing: { canAddLinks, startLinking },
+      startRectId,
+      resetStartLinking,
     } = this.props;
     if (canAddLinks) {
       if (!startLinking) {
         startLinkingRects(id);
+      } else if (startRectId === id) {
+        resetStartLinking();
       } else {
         finishLinkingRects(id);
       }

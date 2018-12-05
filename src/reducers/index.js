@@ -60,6 +60,9 @@ const links = handleActions({
   [actions.deleteLink](state, { payload }) {
     return omit(state, `byId.${payload}`);
   },
+  [actions.resetStartLinking](state) {
+    return { ...state, startRectId: null };
+  },
 }, { byId: {}, startRectId: null });
 
 const linksEditing = handleActions({
@@ -70,6 +73,9 @@ const linksEditing = handleActions({
     return { ...state, startLinking: true };
   },
   [actions.finishLinkingRects](state) {
+    return { ...state, startLinking: false };
+  },
+  [actions.resetStartLinking](state) {
     return { ...state, startLinking: false };
   },
   [actions.toggleDeletingLinksMode](state) {
