@@ -48,6 +48,11 @@ class App extends React.Component {
     toggleDeletingLinksMode();
   }
 
+  handleButtonClick = () => {
+    const { clearAll } = this.props;
+    clearAll();
+  }
+
   render() {
     const { error } = this.state;
     const {
@@ -70,6 +75,8 @@ class App extends React.Component {
             <input id="deleteLink" type="checkbox" checked={canDeleteLinks} onChange={this.handleDeleteLinkCheckbox} />
           Delete link
           </label>
+          <br />
+          <button className="clearButton" type="button" onClick={this.handleButtonClick}>Clear</button>
         </div>
         <svg width={innerWidth} height={innerHeight} onDoubleClick={this.handleDoubleClick}>
           {rectangles.map(({

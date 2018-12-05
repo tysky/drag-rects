@@ -40,8 +40,12 @@ const rectangles = handleActions({
     const newRect = { ...rect, isMoving: false };
     return { ...state, [rectId]: newRect };
   },
+  [actions.clearAll]() {
+    return {};
+  },
 }, {});
 
+const defaultLinksState = { byId: {}, startRectId: null };
 const links = handleActions({
   [actions.startLinkingRects](state, { payload }) {
     return { ...state, startRectId: payload };
@@ -63,8 +67,12 @@ const links = handleActions({
   [actions.resetStartLinking](state) {
     return { ...state, startRectId: null };
   },
-}, { byId: {}, startRectId: null });
+  [actions.clearAll]() {
+    return defaultLinksState;
+  },
+}, defaultLinksState);
 
+const defaulLinksEditingState = { canAddLinks: true, startLinking: false, canDeleteLinks: true };
 const linksEditing = handleActions({
   [actions.toggleDrawingLinksMode](state) {
     return { ...state, canAddLinks: !state.canAddLinks };
@@ -81,7 +89,10 @@ const linksEditing = handleActions({
   [actions.toggleDeletingLinksMode](state) {
     return { ...state, canDeleteLinks: !state.canDeleteLinks };
   },
-}, { canAddLinks: false, startLinking: false, canDeleteLinks: false });
+  [actions.clearAll]() {
+    return defaulLinksEditingState;
+  },
+}, defaulLinksEditingState);
 
 export default combineReducers({
   rectangles,
