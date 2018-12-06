@@ -18,7 +18,8 @@
 
 .error {
   margin-left: 20px;                                                                                                                                                  
-  background-color: red;
+  color: #721c24;
+  background-color: #f8d7da;
 }
 
 .links {

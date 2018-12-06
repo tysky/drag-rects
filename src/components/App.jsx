@@ -51,6 +51,7 @@ class App extends React.Component {
 
   handleButtonClick = () => {
     const { clearAll } = this.props;
+    this.setState({ error: false });
     clearAll();
   }
 
@@ -64,7 +65,7 @@ class App extends React.Component {
       <>
         <div className="info">
           <span>Double click to add rectangle</span>
-          {error && <span className="error">Error! Can&apos;t add rectangle! Try again.</span>}
+          {error && <span className="error"> Not enough space to create a rectangle! Try again.</span>}
         </div>
         <div className="links">
           <label htmlFor="drawLink" title="To draw a link click to one rectangle and then to another">
