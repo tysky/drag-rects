@@ -30,11 +30,12 @@ Then open http://localhost:8080/
 make build
 ```
 ## How to Use
-#### Creat the Rectangle.
-To create a rectangle, double-click on any area of the screen. Rectangles should not intersect. If the space between rectangles is not enough to create a new rectangle, the program throws an error "Not enough space to create a rectangle! Try again."
+#### Create a Rectangle.
+To create a rectangle, double-click on any area of the screen. Rectangles should not intersect. 
+If there is not enough space between rectangles to create a new rectangle, the programm shows an error "Not enough space to create a rectangle! Try again."
 #### Move Rectangles
-To move the rectangle on the screen, left click on it, hold the left mouse button and move the object on the screen.
-#### Create the Link between Rectangles
+To move a rectangle on the screen, left click on it, hold the left mouse button and move the object on the screen.
+#### Create a Link between Rectangles
 To link two rectangles, you need to select one of them by left click, it will be highlighted in yellow color. Then select the second rectangle. When the link is successfully created, a line appears between the rectangles. You can create an unlimited amount of links between rectangles. When you move the rectangles on the screen, the links between them are saved.
 #### Remove Links
 To remove the link, move the mouse cursor to the line between the rectangles, it will be highlighted in orange. Then left click on it.
