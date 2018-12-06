@@ -4,7 +4,12 @@ import getRectColor from '../utils/getRectColor';
 
 
 export const createRect = createAction('RECT_CREATE', rect => ({
-  ...rect, id: Number(uniqueId()), fill: getRectColor(), isMoving: false,
+  ...rect,
+  id: Number(uniqueId()),
+  fill: getRectColor(),
+  willMove: false,
+  isMoving: false,
+  isMoved: false,
 }));
 export const startMovingRect = createAction('RECT_START_MOVING');
 export const finishMovingRect = createAction('RECT_FINISH_MOVING');

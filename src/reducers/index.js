@@ -32,12 +32,14 @@ const rectangles = handleActions({
   },
   [actions.startMovingRect](state, { payload: { rectId, x, y } }) {
     const rect = state.byId[rectId];
-    const newRect = { ...rect, isMoving: true };
+    const newRect = { ...rect, willMove: true };
     return { ...state, cursor: { x, y }, byId: { ...state.byId, [rectId]: newRect } };
   },
   [actions.finishMovingRect](state, { payload: { rectId } }) {
     const rect = state.byId[rectId];
-    const newRect = { ...rect, isMoving: false };
+    const newRect = {
+      ...rect, willMove: false, isMoving: false, isMoved: rect.isMoving,
+    };
     return { ...state, byId: { ...state.byId, [rectId]: newRect } };
   },
   [actions.clearAll]() {

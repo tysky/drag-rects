@@ -25,7 +25,7 @@ class Rectangle extends React.Component {
   handleMouseMove = id => (event) => {
     const { movingRect, rectangles } = this.props;
     const rect = rectangles[id];
-    if (rect.isMoving) {
+    if (rect.isMoving || rect.willMove) {
       const { clientX, clientY } = event;
       movingRect({ rectId: id, x: clientX, y: clientY });
     }
@@ -38,8 +38,9 @@ class Rectangle extends React.Component {
       linksEditing: { canAddLinks, startLinking },
       startRectId,
       resetStartLinking,
+      rectangles,
     } = this.props;
-    if (canAddLinks) {
+    if (canAddLinks && !rectangles[id].isMoved) {
       if (!startLinking) {
         startLinkingRects(id);
       } else if (startRectId === id) {
