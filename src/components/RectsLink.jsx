@@ -17,7 +17,10 @@ class RectsLink extends React.Component {
 
   handleLinkClick = linkId => () => {
     const { deleteLink } = this.props;
-    deleteLink(linkId);
+    const { canDeleteLinks } = this.props;
+    if (canDeleteLinks) {
+      deleteLink(linkId);
+    }
   }
 
   toggleLinkHighlight = () => {
