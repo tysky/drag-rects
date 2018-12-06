@@ -4,14 +4,15 @@ import * as actionCreators from '../actions';
 import isRectsInterseсt from '../utils/isRectsInterseсt';
 import Rectangle from './Rectangle';
 import RectsLink from './RectsLink';
+import { rectsListSelector, linksSelector } from '../selectors';
 
-const mapStateToProps = ({ rectangles, links, linksEditing }) => {
-  const { canAddLinks, canDeleteLinks } = linksEditing;
+const mapStateToProps = (state) => {
+  const { linksEditing: { canAddLinks, canDeleteLinks } } = state;
   const props = {
-    rectangles: Object.values(rectangles.byId),
+    rectangles: rectsListSelector(state),
     canAddLinks,
     canDeleteLinks,
-    links: Object.values(links.byId),
+    links: linksSelector(state),
   };
   return props;
 };

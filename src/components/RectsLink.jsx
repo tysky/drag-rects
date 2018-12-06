@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions';
+import { rectsSelector } from '../selectors';
 
-const mapStateToProps = ({ rectangles, linksEditing }) => {
+const mapStateToProps = (state) => {
+  const { linksEditing } = state;
   const props = {
-    rectangles: rectangles.byId,
+    rectangles: rectsSelector(state),
     canDeleteLinks: linksEditing.canDeleteLinks,
   };
   return props;

@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions';
+import { rectsSelector } from '../selectors';
 
-const mapStateToProps = ({ rectangles, linksEditing, links }) => {
+const mapStateToProps = (state) => {
+  const { linksEditing, links: { startRectId } } = state;
   const props = {
-    rectangles: rectangles.byId,
+    rectangles: rectsSelector(state),
     linksEditing,
-    startRectId: links.startRectId,
+    startRectId,
   };
   return props;
 };
