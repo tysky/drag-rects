@@ -8,42 +8,42 @@ import isRectsInterseсt from '../utils/isRectsInterseсt';
 
 const rectangles = handleActions({
   [actions.createRect](state, { payload }) {
-    return { ...state, [payload.id]: payload };
+    return { ...state, byId: { ...state.byId, [payload.id]: payload } };
   },
   [actions.movingRect](state, { payload: { rectId, x, y } }) {
-    const rect = state[rectId];
+    const oldRect = state.byId[rectId];
 
-    const offsetX = x - rect.cursor.x;
-    const offsetY = y - rect.cursor.y;
+    const offsetX = x - state.cursor.x;
+    const offsetY = y - state.cursor.y;
 
     const newRect = {
-      ...rect,
-      x0: rect.x0 + offsetX,
-      y0: rect.y0 + offsetY,
-      x: rect.x0 + offsetX - rectSize.width / 2,
-      y: rect.y0 + offsetY - rectSize.height / 2,
+      ...oldRect,
+      x0: oldRect.x0 + offsetX,
+      y0: oldRect.y0 + offsetY,
+      x: oldRect.x0 + offsetX - rectSize.width / 2,
+      y: oldRect.y0 + offsetY - rectSize.height / 2,
       isMoving: true,
-      cursor: { x, y },
     };
-    const otherRects = omit(state, rectId);
+    const otherRects = omit(state.byId, rectId);
 
     const hasIntersection = isRectsInterseсt(newRect, Object.values(otherRects), rectSize);
-    return { ...state, [rectId]: hasIntersection ? rect : newRect };
+    const rect = hasIntersection ? oldRect : newRect;
+    return { ...state, cursor: { x, y }, byId: { ...state.byId, [rectId]: rect } };
   },
   [actions.startMovingRect](state, { payload: { rectId, x, y } }) {
-    const rect = state[rectId];
-    const newRect = { ...rect, isMoving: true, cursor: { x, y } };
-    return { ...state, [rectId]: newRect };
+    const rect = state.byId[rectId];
+    const newRect = { ...rect, isMoving: true };
+    return { ...state, cursor: { x, y }, byId: { ...state.byId, [rectId]: newRect } };
   },
   [actions.finishMovingRect](state, { payload: { rectId } }) {
-    const rect = state[rectId];
+    const rect = state.byId[rectId];
     const newRect = { ...rect, isMoving: false };
-    return { ...state, [rectId]: newRect };
+    return { ...state, byId: { ...state.byId, [rectId]: newRect } };
   },
   [actions.clearAll]() {
-    return {};
+    return { byId: {} };
   },
-}, {});
+}, { byId: {} });
 
 const defaultLinksState = { byId: {}, startRectId: null };
 const links = handleActions({

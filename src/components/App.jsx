@@ -8,7 +8,7 @@ import RectsLink from './RectsLink';
 const mapStateToProps = ({ rectangles, links, linksEditing }) => {
   const { canAddLinks, canDeleteLinks } = linksEditing;
   const props = {
-    rectangles: Object.values(rectangles),
+    rectangles: Object.values(rectangles.byId),
     canAddLinks,
     canDeleteLinks,
     links: Object.values(links.byId),

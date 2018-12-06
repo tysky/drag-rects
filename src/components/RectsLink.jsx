@@ -4,7 +4,7 @@ import * as actionCreators from '../actions';
 
 const mapStateToProps = ({ rectangles, linksEditing }) => {
   const props = {
-    rectangles,
+    rectangles: rectangles.byId,
     canDeleteLinks: linksEditing.canDeleteLinks,
   };
   return props;
