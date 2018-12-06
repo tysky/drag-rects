@@ -13,21 +13,26 @@ const mapStateToProps = (state) => {
     canAddLinks,
     canDeleteLinks,
     links: linksSelector(state),
+    error: state.error,
   };
   return props;
 };
 
 class App extends React.Component {
-  state = { error: false }
-
   handleDoubleClick = (event) => {
-    this.setState({ error: false });
+    const {
+      createRect, rectangles, rectSize, error, showError, hideError,
+    } = this.props;
+
+    if (error) {
+      hideError();
+    }
+
     const { clientX, clientY } = event;
-    const { createRect, rectangles, rectSize } = this.props;
     const rect = { x0: clientX, y0: clientY };
     const hasIntersection = isRectsInterseсt(rect, rectangles, rectSize);
     if (hasIntersection) {
-      this.setState({ error: true });
+      showError();
     } else {
       const newRect = {
         x0: clientX, // (x0, y0) - center of the rectangle
@@ -50,15 +55,14 @@ class App extends React.Component {
   }
 
   handleButtonClick = () => {
-    const { clearAll } = this.props;
-    this.setState({ error: false });
+    const { clearAll, hideError } = this.props;
     clearAll();
+    hideError();
   }
 
   render() {
-    const { error } = this.state;
     const {
-      rectangles, rectSize: { height, width }, canAddLinks, canDeleteLinks, links,
+      rectangles, rectSize: { height, width }, canAddLinks, canDeleteLinks, links, error,
     } = this.props;
     const { innerWidth, innerHeight } = window;
     return (

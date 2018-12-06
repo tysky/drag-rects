@@ -9,6 +9,7 @@ const mapStateToProps = (state) => {
     rectangles: rectsSelector(state),
     linksEditing,
     startRectId,
+    error: state.error,
   };
   return props;
 };
@@ -41,7 +42,14 @@ class Rectangle extends React.Component {
       startRectId,
       resetStartLinking,
       rectangles,
+      error,
+      hideError,
     } = this.props;
+
+    if (error) {
+      hideError();
+    }
+
     if (canAddLinks && !rectangles[id].isMoved) {
       if (!startLinking) {
         startLinkingRects(id);

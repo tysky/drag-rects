@@ -24,3 +24,5 @@ export const deleteLink = createAction('LINK_DELETE');
 export const resetStartLinking = createAction('LINKING_RESET_START');
 
 export const clearAll = createAction('CLEAR_ALL');
+export const showError = createAction('ERROR_SHOW');
+export const hideError = createAction('ERROR_HIDE');

@@ -96,8 +96,18 @@ const linksEditing = handleActions({
   },
 }, defaulLinksEditingState);
 
+const error = handleActions({
+  [actions.showError]() {
+    return true;
+  },
+  [actions.hideError]() {
+    return false;
+  },
+}, false);
+
 export default combineReducers({
   rectangles,
   links,
   linksEditing,
+  error,
 });
