@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Stage, Layer } from 'react-konva';
 import * as actionCreators from '../actions';
 import isRectsInterseсt from '../utils/isRectsInterseсt';
 import Rectangle from './Rectangle';
-import RectsLink from './RectsLink';
+// import RectsLink from './RectsLink';
 import { rectsListSelector, linksSelector } from '../selectors';
 
 const mapStateToProps = (state) => {
@@ -28,7 +29,7 @@ class App extends React.Component {
       hideError();
     }
 
-    const { clientX, clientY } = event;
+    const { clientX, clientY } = event.evt;
     const rect = { x0: clientX, y0: clientY };
     const hasIntersection = isRectsInterseсt(rect, rectangles, rectSize);
     if (hasIntersection) {
@@ -40,6 +41,7 @@ class App extends React.Component {
         x: clientX - rectSize.width / 2,
         y: clientY - rectSize.height / 2,
       };
+      console.log(newRect);
       createRect(newRect);
     }
   }
@@ -84,7 +86,24 @@ class App extends React.Component {
           <br />
           <button className="clearButton" type="button" onClick={this.handleButtonClick}>Clear</button>
         </div>
-        <svg width={innerWidth} height={innerHeight} onDoubleClick={this.handleDoubleClick}>
+        <Stage width={innerWidth} height={innerHeight} onDblClick={this.handleDoubleClick}>
+          <Layer>
+            {rectangles.map(({
+              id, x, y, fill,
+            }) => (
+              <Rectangle
+                key={id}
+                id={id}
+                x={x}
+                y={y}
+                width={width}
+                height={height}
+                fill={fill}
+              />
+            ))}
+          </Layer>
+        </Stage>
+        {/* <svg width={innerWidth} height={innerHeight} onDoubleClick={this.handleDoubleClick}>
           {rectangles.map(({
             id, x, y, fill,
           }) => (
@@ -106,7 +125,7 @@ class App extends React.Component {
               rect2Id={rect2Id}
             />
           ))}
-        </svg>
+        </svg> */}
       </>
     );
   }

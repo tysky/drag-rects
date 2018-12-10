@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Rect } from 'react-konva';
 import * as actionCreators from '../actions';
 import { rectsSelector } from '../selectors';
 
@@ -17,7 +18,8 @@ const mapStateToProps = (state) => {
 class Rectangle extends React.Component {
   handleMouseDown = id => (e) => {
     const { startMovingRect } = this.props;
-    startMovingRect({ rectId: id, x: e.clientX, y: e.clientY });
+    const { clientX, clientY } = e.evt;
+    startMovingRect({ rectId: id, x: clientX, y: clientY });
   }
 
   handleMouseUp = id => () => {
@@ -29,10 +31,11 @@ class Rectangle extends React.Component {
     const { movingRect, rectangles } = this.props;
     const rect = rectangles[id];
     if (rect.isMoving || rect.willMove) {
-      const { clientX, clientY } = event;
+      const { clientX, clientY } = event.evt;
       movingRect({ rectId: id, x: clientX, y: clientY });
     }
   }
+
 
   handleClick = id => () => {
     const {
@@ -66,14 +69,15 @@ class Rectangle extends React.Component {
       id, x, y, fill, width, height, startRectId,
     } = this.props;
     return (
-      <rect
+      <Rect
         x={x}
         y={y}
         width={width}
         height={height}
         fill={fill}
+        // draggable
         stroke={startRectId === id ? 'yellow' : 'black'}
-        strokeWidth={startRectId === id ? '6' : '4'}
+        strokeWidth={startRectId === id ? 6 : 4}
         onMouseDown={this.handleMouseDown(id)}
         onMouseUp={this.handleMouseUp(id)}
         onMouseMove={this.handleMouseMove(id)}
