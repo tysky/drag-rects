@@ -16,25 +16,25 @@ const mapStateToProps = (state) => {
 };
 
 class Rectangle extends React.Component {
-  handleMouseDown = id => (e) => {
-    const { startMovingRect } = this.props;
-    const { clientX, clientY } = e.evt;
-    startMovingRect({ rectId: id, x: clientX, y: clientY });
-  }
-
-  handleMouseUp = id => () => {
-    const { finishMovingRect } = this.props;
-    finishMovingRect({ rectId: id });
-  }
-
-  handleMouseMove = id => (event) => {
-    const { movingRect, rectangles } = this.props;
-    const rect = rectangles[id];
-    if (rect.isMoving || rect.willMove) {
-      const { clientX, clientY } = event.evt;
-      movingRect({ rectId: id, x: clientX, y: clientY });
+    handleDragStart = id => (e) => {
+      const { startMovingRect } = this.props;
+      const { clientX, clientY } = e.evt;
+      startMovingRect({ rectId: id, x: clientX, y: clientY });
     }
-  }
+
+    handleDragEnd = id => () => {
+      const { finishMovingRect } = this.props;
+      finishMovingRect({ rectId: id });
+    }
+
+    handleDragMove = id => (event) => {
+      const { movingRect, rectangles } = this.props;
+      const rect = rectangles[id];
+      if (rect.isMoving || rect.willMove) {
+        const { clientX, clientY } = event.evt;
+        movingRect({ rectId: id, x: clientX, y: clientY });
+      }
+    }
 
 
   handleClick = id => () => {
@@ -44,16 +44,16 @@ class Rectangle extends React.Component {
       linksEditing: { canAddLinks, startLinking },
       startRectId,
       resetStartLinking,
-      rectangles,
+      // rectangles,
       error,
       hideError,
     } = this.props;
-
     if (error) {
       hideError();
     }
 
-    if (canAddLinks && !rectangles[id].isMoved) {
+    // if (canAddLinks && !rectangles[id].isMoved) {
+    if (canAddLinks) {
       if (!startLinking) {
         startLinkingRects(id);
       } else if (startRectId === id) {
@@ -63,6 +63,7 @@ class Rectangle extends React.Component {
       }
     }
   }
+
 
   render() {
     const {
@@ -75,12 +76,12 @@ class Rectangle extends React.Component {
         width={width}
         height={height}
         fill={fill}
-        // draggable
+        draggable
         stroke={startRectId === id ? 'yellow' : 'black'}
         strokeWidth={startRectId === id ? 6 : 4}
-        onMouseDown={this.handleMouseDown(id)}
-        onMouseUp={this.handleMouseUp(id)}
-        onMouseMove={this.handleMouseMove(id)}
+        onDragStart={this.handleDragStart(id)}
+        onDragMove={this.handleDragMove(id)}
+        onDragEnd={this.handleDragEnd(id)}
         onClick={this.handleClick(id)}
       />
     );
