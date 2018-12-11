@@ -4,8 +4,12 @@ import { Stage, Layer } from 'react-konva';
 import * as actionCreators from '../actions';
 import isRectsInterseсt from '../utils/isRectsInterseсt';
 import Rectangle from './Rectangle';
+import Portal from './Portal';
 // import RectsLink from './RectsLink';
 import { rectsListSelector, linksSelector } from '../selectors';
+import {
+  infoStyle, linksStyle, errorStyle, clearButtonStyle,
+} from '../canvasElementsStyles';
 
 const mapStateToProps = (state) => {
   const { linksEditing: { canAddLinks, canDeleteLinks } } = state;
@@ -69,25 +73,31 @@ class App extends React.Component {
     const { innerWidth, innerHeight } = window;
     return (
       <>
-        <div className="info">
-          <span>Double click to add rectangle</span>
-          {error && <span className="error"> Not enough space to create a rectangle! Try again.</span>}
-        </div>
-        <div className="links">
-          <label htmlFor="drawLink" title="To draw a link click to one rectangle and then to another">
-            <input id="drawLink" type="checkbox" checked={canAddLinks} onChange={this.handleDrawLinkCheckbox} />
-          Draw link
-          </label>
-          <br />
-          <label htmlFor="deleteLink" title="To delete a link click on it">
-            <input id="deleteLink" type="checkbox" checked={canDeleteLinks} onChange={this.handleDeleteLinkCheckbox} />
-          Delete link
-          </label>
-          <br />
-          <button className="clearButton" type="button" onClick={this.handleButtonClick}>Clear</button>
-        </div>
         <Stage width={innerWidth} height={innerHeight} onDblClick={this.handleDoubleClick}>
           <Layer>
+            <Portal>
+              <div style={infoStyle}>
+                <span>Double click to add rectangle</span>
+                {error && (
+                <span style={errorStyle}>
+                  Not enough space to create a rectangle! Try again.
+                </span>
+                )}
+              </div>
+              <div style={linksStyle}>
+                <label htmlFor="drawLink" title="To draw a link click to one rectangle and then to another">
+                  <input id="drawLink" type="checkbox" checked={canAddLinks} onChange={this.handleDrawLinkCheckbox} />
+                  Draw link
+                </label>
+                <br />
+                <label htmlFor="deleteLink" title="To delete a link click on it">
+                  <input id="deleteLink" type="checkbox" checked={canDeleteLinks} onChange={this.handleDeleteLinkCheckbox} />
+                  Delete linkq
+                </label>
+                <br />
+                <button style={clearButtonStyle} type="button" onClick={this.handleButtonClick}>Clear</button>
+              </div>
+            </Portal>
             {rectangles.map(({
               id, x, y, fill,
             }) => (
