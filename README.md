@@ -1,6 +1,6 @@
 # Drag colored rectangles
 
-### [Live Application](http://drag-rectangles.surge.sh/)
+### [Live Application](http://drag-rects-canvas.surge.sh/)
 
 The application allows to create rectangles, move them, create links between rectangles and delete created links.
 
