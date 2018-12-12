@@ -3,7 +3,7 @@ import { handleActions } from 'redux-actions';
 import omit from 'lodash/omit';
 import * as actions from '../actions';
 import rectSize from '../defaultRectSize';
-import isRectsInterseсt from '../utils/isRectsInterseсt';
+// import { isRectsInterseсt } from '../utils/isRectsInterseсt';
 
 
 const rectangles = handleActions({
@@ -11,12 +11,13 @@ const rectangles = handleActions({
     return { ...state, byId: { ...state.byId, [payload.id]: payload } };
   },
   [actions.movingRect](state, { payload: { rectId, x, y } }) {
-    const oldRect = state.byId[rectId];
+    const oldRect = state.movingRectParams;
+    // const oldRect = state.byId[rectId];
 
     const offsetX = x - state.cursor.x;
     const offsetY = y - state.cursor.y;
 
-    const newRect = {
+    const movingRectParams = {
       ...oldRect,
       x0: oldRect.x0 + offsetX,
       y0: oldRect.y0 + offsetY,
@@ -24,28 +25,46 @@ const rectangles = handleActions({
       y: oldRect.y0 + offsetY - rectSize.height / 2,
       isMoving: true,
     };
-    const otherRects = omit(state.byId, rectId);
+    // const otherRects = omit(state.byId, rectId);
 
-    const hasIntersection = isRectsInterseсt(newRect, Object.values(otherRects), rectSize);
-    const rect = hasIntersection ? oldRect : newRect;
-    return { ...state, cursor: { x, y }, byId: { ...state.byId, [rectId]: rect } };
+    // const hasIntersection = isRectsInterseсt(newRect, Object.values(otherRects), rectSize);
+    // const rect = hasIntersection ? oldRect : newRect;
+    return { ...state, cursor: { x, y }, movingRectParams };
+    // return { ...state, cursor: { x, y }, byId: { ...state.byId, [rectId]: rect } };
   },
   [actions.startMovingRect](state, { payload: { rectId, x, y } }) {
     const rect = state.byId[rectId];
     const newRect = { ...rect, willMove: true };
-    return { ...state, cursor: { x, y }, byId: { ...state.byId, [rectId]: newRect } };
-  },
-  [actions.finishMovingRect](state, { payload: { rectId } }) {
-    const rect = state.byId[rectId];
-    const newRect = {
-      ...rect, willMove: false, isMoving: false, isMoved: rect.isMoving,
+    return {
+      ...state, cursor: { x, y }, movingRectParams: newRect, byId: { ...state.byId, [rectId]: newRect },
     };
-    return { ...state, byId: { ...state.byId, [rectId]: newRect } };
+  },
+  [actions.finishMovingRect](state, { payload: { rectId, x, y } }) {
+    const oldRect = state.movingRectParams;
+    // const oldRect = state.byId[rectId];
+
+    const offsetX = x - state.cursor.x;
+    const offsetY = y - state.cursor.y;
+    const newRect = {
+      ...oldRect,
+      x0: oldRect.x0 + offsetX,
+      y0: oldRect.y0 + offsetY,
+      x: oldRect.x0 + offsetX - rectSize.width / 2,
+      y: oldRect.y0 + offsetY - rectSize.height / 2,
+      isMoving: false,
+      willMove: false,
+      isMoved: true,
+    };
+    // const rect = state.byId[rectId];
+    // const newRect = {
+    //   ...oldRect, willMove: false, isMoving: false, isMoved: rect.isMoving,
+    // };
+    return { ...state, movingRectParams: {}, byId: { ...state.byId, [rectId]: newRect } };
   },
   [actions.clearAll]() {
     return { byId: {} };
   },
-}, { byId: {} });
+}, { byId: {}, movingRectParams: {} });
 
 const defaultLinksState = { byId: {}, startRectId: null };
 const links = handleActions({

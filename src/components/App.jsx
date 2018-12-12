@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Stage, Layer } from 'react-konva';
 import * as actionCreators from '../actions';
-import isRectsInterseсt from '../utils/isRectsInterseсt';
+import { isRectsInterseсt } from '../utils/isRectsInterseсt';
 import Rectangle from './Rectangle';
 import Portal from './Portal';
-// import RectsLink from './RectsLink';
+import RectsLink from './RectsLink';
 import { rectsListSelector, linksSelector } from '../selectors';
 import {
   infoStyle, linksStyle, errorStyle, clearButtonStyle,
@@ -45,7 +45,6 @@ class App extends React.Component {
         x: clientX - rectSize.width / 2,
         y: clientY - rectSize.height / 2,
       };
-      console.log(newRect);
       createRect(newRect);
     }
   }
@@ -92,7 +91,7 @@ class App extends React.Component {
                 <br />
                 <label htmlFor="deleteLink" title="To delete a link click on it">
                   <input id="deleteLink" type="checkbox" checked={canDeleteLinks} onChange={this.handleDeleteLinkCheckbox} />
-                  Delete linkq
+                  Delete link
                 </label>
                 <br />
                 <button style={clearButtonStyle} type="button" onClick={this.handleButtonClick}>Clear</button>
@@ -111,31 +110,16 @@ class App extends React.Component {
                 fill={fill}
               />
             ))}
+            {links.map(({ id, rect1Id, rect2Id }) => (
+              <RectsLink
+                key={id}
+                id={id}
+                rect1Id={rect1Id}
+                rect2Id={rect2Id}
+              />
+            ))}
           </Layer>
         </Stage>
-        {/* <svg width={innerWidth} height={innerHeight} onDoubleClick={this.handleDoubleClick}>
-          {rectangles.map(({
-            id, x, y, fill,
-          }) => (
-            <Rectangle
-              key={id}
-              id={id}
-              x={String(x)}
-              y={String(y)}
-              width={String(width)}
-              height={String(height)}
-              fill={fill}
-            />
-          ))}
-          {links.map(({ id, rect1Id, rect2Id }) => (
-            <RectsLink
-              key={id}
-              id={id}
-              rect1Id={rect1Id}
-              rect2Id={rect2Id}
-            />
-          ))}
-        </svg> */}
       </>
     );
   }
