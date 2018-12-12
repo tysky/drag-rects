@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Stage, Layer } from 'react-konva';
 import * as actionCreators from '../actions';
-import { isRectsInterseсt } from '../utils/isRectsInterseсt';
+import isRectsInterseсt from '../utils/isRectsInterseсt';
 import Rectangle from './Rectangle';
 import Portal from './Portal';
 import RectsLink from './RectsLink';

@@ -33,7 +33,7 @@ class Rectangle extends React.Component {
       const rect = rectangles[id];
       if (rect.isMoving || rect.willMove) {
         const { clientX, clientY } = event.evt;
-        movingRect({ rectId: id, x: clientX, y: clientY });
+        movingRect({ x: clientX, y: clientY });
       }
     }
 

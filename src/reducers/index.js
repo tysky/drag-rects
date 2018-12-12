@@ -3,16 +3,14 @@ import { handleActions } from 'redux-actions';
 import omit from 'lodash/omit';
 import * as actions from '../actions';
 import rectSize from '../defaultRectSize';
-// import { isRectsInterseсt } from '../utils/isRectsInterseсt';
 
 
 const rectangles = handleActions({
   [actions.createRect](state, { payload }) {
     return { ...state, byId: { ...state.byId, [payload.id]: payload } };
   },
-  [actions.movingRect](state, { payload: { rectId, x, y } }) {
+  [actions.movingRect](state, { payload: { x, y } }) {
     const oldRect = state.movingRectParams;
-    // const oldRect = state.byId[rectId];
 
     const offsetX = x - state.cursor.x;
     const offsetY = y - state.cursor.y;
@@ -25,24 +23,20 @@ const rectangles = handleActions({
       y: oldRect.y0 + offsetY - rectSize.height / 2,
       isMoving: true,
     };
-    // const otherRects = omit(state.byId, rectId);
-
-    // const hasIntersection = isRectsInterseсt(newRect, Object.values(otherRects), rectSize);
-    // const rect = hasIntersection ? oldRect : newRect;
     return { ...state, cursor: { x, y }, movingRectParams };
-    // return { ...state, cursor: { x, y }, byId: { ...state.byId, [rectId]: rect } };
   },
   [actions.startMovingRect](state, { payload: { rectId, x, y } }) {
     const rect = state.byId[rectId];
     const newRect = { ...rect, willMove: true };
     return {
-      ...state, cursor: { x, y }, movingRectParams: newRect, byId: { ...state.byId, [rectId]: newRect },
+      ...state,
+      cursor: { x, y },
+      movingRectParams: newRect,
+      byId: { ...state.byId, [rectId]: newRect },
     };
   },
   [actions.finishMovingRect](state, { payload: { rectId, x, y } }) {
     const oldRect = state.movingRectParams;
-    // const oldRect = state.byId[rectId];
-
     const offsetX = x - state.cursor.x;
     const offsetY = y - state.cursor.y;
     const newRect = {
@@ -55,14 +49,10 @@ const rectangles = handleActions({
       willMove: false,
       isMoved: true,
     };
-    // const rect = state.byId[rectId];
-    // const newRect = {
-    //   ...oldRect, willMove: false, isMoving: false, isMoved: rect.isMoving,
-    // };
     return { ...state, movingRectParams: {}, byId: { ...state.byId, [rectId]: newRect } };
   },
   [actions.clearAll]() {
-    return { byId: {} };
+    return { byId: {}, movingRectParams: {} };
   },
 }, { byId: {}, movingRectParams: {} });
 
