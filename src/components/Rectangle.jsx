@@ -22,9 +22,10 @@ class Rectangle extends React.Component {
       startMovingRect({ rectId: id, x: clientX, y: clientY });
     }
 
-    handleDragEnd = id => () => {
+    handleDragEnd = id => (e) => {
       const { finishMovingRect } = this.props;
-      finishMovingRect({ rectId: id });
+      const { clientX, clientY } = e.evt;
+      finishMovingRect({ rectId: id, x: clientX, y: clientY });
     }
 
     handleDragMove = id => (event) => {
@@ -44,7 +45,6 @@ class Rectangle extends React.Component {
       linksEditing: { canAddLinks, startLinking },
       startRectId,
       resetStartLinking,
-      // rectangles,
       error,
       hideError,
     } = this.props;
@@ -52,7 +52,6 @@ class Rectangle extends React.Component {
       hideError();
     }
 
-    // if (canAddLinks && !rectangles[id].isMoved) {
     if (canAddLinks) {
       if (!startLinking) {
         startLinkingRects(id);
@@ -63,7 +62,6 @@ class Rectangle extends React.Component {
       }
     }
   }
-
 
   render() {
     const {
